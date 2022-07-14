@@ -42,3 +42,20 @@ curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params
 
 
 curl -s -d '{"jsonrpc": "2.0", "method": "EXPERIMENTAL_protocol_config", "id": "dontcare", "params": {"finality": "final"}}' -H 'Content-Type: application/json' https://rpc.testnet.near.org | jq .result.epoch_length
+
+
+CURRENT VALIDATOR:
+curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' http://localhost:3030/ | jq -c '.result.current_validators[] | select(.account_id | contains ("alpha-centauri.pool.f863973.m0"))' | jq
+
+NODE STATUS:
+
+curl -s http://127.0.0.1:3030/status
+
+## Ping Management
+
+```sh
+crontab -u alpha -l
+crontab -u alpha -e
+
+0 * * * * /home/alpha/alpha-node/ping-management/ping-script.sh
+```

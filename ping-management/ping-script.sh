@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-WORKING_DIR="/home/alpha"
+WORKING_DIR="/home/alpha/alpha-node/ping-management"
 LATEST_FILE=$WORKING_DIR"/latest.txt"
 LOG_FILE=$WORKING_DIR"/ping_log.log"
 
@@ -21,7 +21,7 @@ fi
 if [[ "${1}" != "" ]]; then
     NETWORK=$1
     NEAR_ENV=$NETWORK
-    RPC_URL="https://rpc.testnet.near.org"
+    RPC_URL="http://127.0.0.1:3030/status"
 
     if [[ "${NETWORK}" == "mainnet" ]]; then
         RPC_URL="https://rpc.mainnet.near.org"
@@ -31,13 +31,13 @@ else
         echo "ping-script.sh testnet"
 fi
 
-CURRENT_EPOCH=$(curl -s -d '{"jsonrpc": "2.0", "method": "EXPERIMENTAL_protocol_config", "id": "dontcare", "params": {"finality": "final"}}' -H 'Content-Type: application/json' https://rpc.testnet.near.org | jq .result.epoch_length)
+CURRENT_EPOCH=$(curl -s http://127.0.0.1:3030/status | jq .sync_info.epoch_start_height)
 LAST_UPDATE_EPOCH=$(tail -n 1 $LATEST_FILE)
 
 if [[ "$CURRENT_EPOCH" != "$LAST_UPDATE_EPOCH" ]]
 then
     echo $CURRENT_EPOCH >> $LATEST_FILE
     echo "["$(date -u)"]: ---------------" >> $LOG_FILE
-    near call alpha-centauri.pool.f863973.m0 ping '{}' --accountId alpha-centauri.testnet --gas=300000000000000 >> $LOG_FILE
+    near call alpha-centauri.factory.shardnet.near '{}' --accountId alpha-centauri.shardnet.near --gas=300000000000000 >> $LOG_FILE
     echo "-----------------------------------" >> $LOG_FILE
 fi

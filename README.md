@@ -45,11 +45,45 @@ curl -s -d '{"jsonrpc": "2.0", "method": "EXPERIMENTAL_protocol_config", "id": "
 
 
 CURRENT VALIDATOR:
-curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' http://localhost:3030/ | jq -c '.result.current_validators[] | select(.account_id | contains ("alpha-centauri.pool.f863973.m0"))' | jq
+curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' http://localhost:3030/ | jq -c '.result.current_validators[] | select(.account_id | contains ("alpha-centauri.factory.shardnet.near"))' | jq
 
 NODE STATUS:
 
 curl -s http://127.0.0.1:3030/status
+
+## Common Commands:
+
+```
+sudo apt install curl jq
+```
+
+**Check your node version:**
+
+Command:
+```
+curl -s http://127.0.0.1:3030/status | jq .version
+```
+
+**Check Delegators and Stake:**
+
+Command:
+```
+near view alpha-centauri.factory.shardnet.near get_accounts '{"from_index": 0, "limit": 10}' --accountId alpha-centauri.shardnet.near
+```
+
+**Check Reason Validator Kicked:**
+
+Command:
+```
+curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' 127.0.0.1:3030 | jq -c '.result.prev_epoch_kickout[] | select(.account_id | contains ("alpha-centauri.factory.shardnet.near"))' | jq .reason
+```
+
+**Check Blocks Produced / Expected:**
+
+Command:
+```
+curl -s -d '{"jsonrpc": "2.0", "method": "validators", "id": "dontcare", "params": [null]}' -H 'Content-Type: application/json' 127.0.0.1:3030 | jq -c '.result.current_validators[] | select(.account_id | contains ("alpha-centauri.factory.shardnet.near"))'
+```
 
 ## Ping Management
 

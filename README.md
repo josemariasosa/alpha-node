@@ -2,7 +2,7 @@
 
 ## NEARd
 
-sudo journalctl -n 100 -f -u neard
+sudo journalctl -n 100 -f -u neard | ccze -A
 
 sudo systemctl status neard
 
